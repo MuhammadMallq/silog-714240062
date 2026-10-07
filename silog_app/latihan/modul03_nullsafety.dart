@@ -51,7 +51,7 @@ void ujiPenanganan() {
       print('Kesalahan tidak terduga: $e');
       print(s);
     } finally {
-      print('Pencarian $resi selesai.');
+      print('Pencarian $resi Selesai.');
     }
   }
 }

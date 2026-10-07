@@ -71,7 +71,7 @@ Future<void> main() async {
   } on ResiTidakDitemukan catch (e) {
     print('Peringatan: $e');
   } catch (e) {
-    print('Gagal mengambil data: $e');
+    print('Gagal mengambil Data: $e');
   }
   print('4. Proses selesai.');
 
