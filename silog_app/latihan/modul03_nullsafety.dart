@@ -1,3 +1,4 @@
+// Latihan 1: Null Safety
 class DataKiriman {
   final String resi; // wajib
   final String kotaTujuan; // wajib
@@ -19,6 +20,7 @@ String ringkasan(DataKiriman k) {
   return '${k.resi} | ${k.kotaTujuan} | $status | $catatan';
 }
 
+// Latihan 2: Penanganan Error
 class ResiTidakDitemukan implements Exception {
   final String resi;
   ResiTidakDitemukan(this.resi);
