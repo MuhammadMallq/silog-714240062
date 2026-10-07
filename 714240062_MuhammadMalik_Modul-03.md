@@ -16,34 +16,34 @@
 ---
 
 ### 2. Tujuan Praktikum
-1. Memahami prinsip kerja **Sound Null Safety** pada bahasa pemrograman Dart versi 2.12 ke atas.
-2. Menguasai deklarasi tipe data *nullable* (`?`) dan *non-nullable* serta operator *null-aware* (`?.`, `??`, `??=`, `!`).
-3. Mengimplementasikan mekanisme penanganan kesalahan (*error & exception handling*) menggunakan `try`, `on`, `catch`, dan `finally`.
-4. Memahami arsitektur eksekusi asinkron berbasis *single-thread event loop* melalui objek `Future`.
-5. Menerapkan sintaksis `async` dan `await` untuk menangani proses pengambilan data yang memiliki latensi/tundaan jaringan.
-6. Menganalisis perbedaan efisiensi waktu antara eksekusi sekuensial (berurutan) dan eksekusi paralel menggunakan `Future.wait`.
-7. Menyusun fungsi pelacakan banyak paket secara konkuren yang tangguh (*fault-tolerant*) terhadap kegagalan individual.
+1. Memahami konsep Sound Null Safety pada bahasa pemrograman Dart.
+2. Menguasai deklarasi tipe nullable (`?`) dan non-nullable, serta operator null-aware (`?.`, `??`, `??=`, `!`).
+3. Menerapkan penanganan kesalahan menggunakan `try`, `catch`, `on`, dan `finally`.
+4. Memahami mekanisme eksekusi asinkron dan objek `Future`.
+5. Menerapkan kata kunci `async` dan `await` pada pengambilan data yang tertunda.
+6. Membandingkan performa eksekusi berurutan dengan eksekusi paralel menggunakan `Future.wait`.
+7. Menyusun fungsi pelacakan resi secara bersamaan dengan penanganan error.
 
 ---
 
 ### 3. Alat dan Bahan
-| No | Perangkat / Alat | Deskripsi / Versi |
+| No | Alat / Bahan | Keterangan / Versi |
 |:--:|---|---|
-| 1 | Sistem Operasi | macOS (Darwin x86_64) |
-| 2 | Dart SDK | Versi 3.8.1 (stable) |
-| 3 | Flutter SDK | Versi 3.32.8 (stable channel) |
-| 4 | Code Editor / IDE | Visual Studio Code / Antigravity IDE |
-| 5 | Command Line Interface | Zsh Terminal |
-| 6 | Version Control System | Git 2.39+ |
-| 7 | Repositori GitHub | `https://github.com/MuhammadMallq/silog-714240062.git` |
+| 1 | Sistem Operasi | macOS |
+| 2 | Dart SDK | Versi 3.8.1 |
+| 3 | Flutter SDK | Versi 3.32.8 |
+| 4 | Visual Studio Code | Versi terbaru beserta ekstensi Dart |
+| 5 | Terminal | Zsh Shell |
+| 6 | Git | Version Control System |
+| 7 | Repositori GitHub | `MuhammadMallq/silog-714240062` |
 
 ---
 
 ### 4. Langkah Kerja
 
-#### 4.1. Penyiapan Cabang Kerja (Branch Git)
-1. Buka terminal pada direktori root proyek `praktikum-pemrograman4`.
-2. Buat dan aktifkan cabang kerja baru untuk modul ini:
+#### 4.1. Penyiapan Cabang Kerja
+1. Buka proyek `silog_app` pada Visual Studio Code.
+2. Buat dan beralih ke cabang kerja modul 3 pada terminal:
    ```bash
    git checkout -b praktikum/modul-03
    ```
@@ -52,42 +52,34 @@
    git branch
    ```
 
-#### 4.2. Penyiapan dan Eksekusi Berkas
-1. Siapkan dua berkas di dalam direktori `silog_app/latihan/`:
-   - `modul03_nullsafety.dart` (untuk materi Null Safety & Penanganan Error)
-   - `modul03_async.dart` (untuk materi Future, Async/Await, dan Tugas Praktikum)
-2. Jalankan program melalui terminal dari direktori `silog_app`:
-   ```bash
-   # Masuk ke direktori aplikasi
-   cd silog_app
+#### 4.2. Penyiapan Berkas Latihan
+1. Buat berkas `modul03_nullsafety.dart` di dalam folder `latihan/`.
+2. Buat berkas `modul03_async.dart` di dalam folder `latihan/`.
 
-   # Menjalankan Latihan 1 & 2
-   dart run latihan/modul03_nullsafety.dart
+#### 4.3. Eksekusi Program
+Jalankan program dari direktori `silog_app`:
+```bash
+# Latihan 1 dan Latihan 2
+dart run latihan/modul03_nullsafety.dart
 
-   # Menjalankan Latihan 3, 4, dan Tugas Praktikum
-   dart run latihan/modul03_async.dart
+# Latihan 3, Latihan 4, dan Tugas Praktikum
+dart run latihan/modul03_async.dart
 
-   # Memverifikasi kode bersih dari error statis
-   dart analyze
-   ```
-
-*(Catatan Teknis: Jika terminal sudah berada di dalam folder `latihan/`, eksekusi dilakukan langsung dengan memanggil nama berkas tanpa prefix direktori, misalnya `dart run modul03_nullsafety.dart`).*
+# Pemeriksaan kode
+dart analyze
+```
 
 ---
 
 ### 5. Kode Program Beserta Penjelasannya
 
-#### 5.1. Berkas `silog_app/latihan/modul03_nullsafety.dart`
+#### 5.1. Berkas `latihan/modul03_nullsafety.dart`
 ```dart
-// Modul 03: Null Safety dan Penanganan Error
-// Praktikum Pemrograman IV - D4 Teknik Informatika ULBI
-
 class DataKiriman {
-  final String resi; // wajib (non-nullable)
-  final String kotaTujuan; // wajib (non-nullable)
-  final String? catatan; // opsional (nullable)
-  final DateTime? waktuTerima; // opsional (nullable)
-
+  final String resi; // wajib
+  final String kotaTujuan; // wajib
+  final String? catatan; // opsional
+  final DateTime? waktuTerima; // opsional
   DataKiriman({
     required this.resi,
     required this.kotaTujuan,
@@ -97,22 +89,16 @@ class DataKiriman {
 }
 
 String ringkasan(DataKiriman k) {
-  // Operator ?? memberikan fallback default jika nilai k.catatan adalah null
   final catatan = k.catatan ?? '(tanpa catatan)';
-  
-  // Menguji kondisi null; jika tidak null, gunakan operator null assertion (!)
   final status = k.waktuTerima == null
       ? 'Dalam perjalanan'
       : 'Diterima pada ${k.waktuTerima!.toIso8601String()}';
-      
   return '${k.resi} | ${k.kotaTujuan} | $status | $catatan';
 }
 
-// Latihan 2: Penanganan Error
 class ResiTidakDitemukan implements Exception {
   final String resi;
   ResiTidakDitemukan(this.resi);
-
   @override
   String toString() => 'Resi $resi tidak ditemukan pada basis data.';
 }
@@ -135,21 +121,17 @@ void ujiPenanganan() {
     try {
       print('$resi -> ${cariKota(resi)}');
     } on ResiTidakDitemukan catch (e) {
-      // Menangkap jenis exception spesifik domain
       print('Peringatan: $e');
     } catch (e, s) {
-      // Menangkap kesalahan umum lainnya beserta stack trace
       print('Kesalahan tidak terduga: $e');
       print(s);
     } finally {
-      // Blok finally selalu dijalankan di akhir proses
       print('Pencarian $resi selesai.');
     }
   }
 }
 
 void main() {
-  print('=== LATIHAN 1: NULL SAFETY ===');
   final daftar = <DataKiriman>[
     DataKiriman(resi: 'SLG-001', kotaTujuan: 'Bandung'),
     DataKiriman(
@@ -163,68 +145,54 @@ void main() {
     print(ringkasan(k));
   }
 
-  print('\n=== LATIHAN 2: PENANGANAN ERROR ===');
   ujiPenanganan();
 }
 ```
 
-**Penjelasan Logika:**
-1. **Null Safety**: Variabel `resi` dan `kotaTujuan` dideklarasikan `String` (tanpa tanda tanya) sehingga compiler menjamin tidak pernah `null`. Variabel `catatan` bertipe `String?` dan `waktuTerima` bertipe `DateTime?` menandakan bahwa nilainya diizinkan bernilai `null`.
-2. **Operator `??` (Null-Coalescing)**: Menetapkan nilai pengganti `(tanpa catatan)` jika `k.catatan` bernilai `null`.
-3. **Operator `!` (Null-Assertion)**: Memberitahu compiler bahwa `k.waktuTerima` secara pasti sudah bukan `null` setelah diverifikasi melalui percabangan ternary.
-4. **Exception Handling**: Pembuatan kelas `ResiTidakDitemukan` mengimplementasikan antarmuka bawaan `Exception`. Konstruksi `try - on ... catch - finally` memisahkan penanganan galat spesifik domain logistik dari galat sistem tak terduga, dan blok `finally` memastikan pembersihan/pemberitahuan akhir selalu dieksekusi.
+**Penjelasan Singkat:**
+- `DataKiriman`: Menggunakan null safety. `resi` dan `kotaTujuan` bertipe `String` (wajib diisi / non-nullable), sedangkan `catatan` bertipe `String?` dan `waktuTerima` bertipe `DateTime?` bersifat opsional (boleh bernilai null).
+- Operator `??`: Memberikan teks pengganti `'(tanpa catatan)'` apabila `k.catatan` bernilai null.
+- Operator `!`: Null assertion operator pada `k.waktuTerima!` digunakan karena pada blok `else` dari ternary sudah dipastikan nilainya bukan null.
+- `ResiTidakDitemukan`: Kelas exception kustom yang mengimplementasikan `Exception`.
+- `try-on-catch-finally`: `on ResiTidakDitemukan catch (e)` menangkap exception spesifik resi yang tidak ditemukan, sedangkan `finally` selalu dieksekusi di akhir setiap iterasi pencarian.
 
 ---
 
-#### 5.2. Berkas `silog_app/latihan/modul03_async.dart`
+#### 5.2. Berkas `latihan/modul03_async.dart`
 ```dart
-// Modul 03: Pemrograman Asinkron dan Future
-// Praktikum Pemrograman IV - D4 Teknik Informatika ULBI
-// Mahasiswa: Muhammad Malik (NIM: 714240062)
-
 class ResiTidakDitemukan implements Exception {
   final String resi;
   ResiTidakDitemukan(this.resi);
-
   @override
   String toString() => 'Resi $resi tidak ditemukan pada basis data.';
 }
 
-// Basis data simulasi berisi minimal lima resi
-final Map<String, String> basisDataStatus = {
-  'SLG-001': 'Paket sedang disortir di hub Bandung',
-  'SLG-002': 'Paket sedang dalam perjalanan menuju gudang transit Jakarta',
-  'SLG-003': 'Paket tiba di fasilitas sortir Surabaya',
-  'SLG-004': 'Paket sedang diantar kurir ke alamat penerima di Semarang',
-  'SLG-005': 'Paket telah diterima oleh penerima di Medan',
+final Map<String, String> basisResi = {
+  'SLG-001': 'Paket sedang dalam perjalanan menuju gudang transit.',
+  'SLG-002': 'Paket tiba di fasilitas sortir Surabaya.',
+  'SLG-003': 'Paket sedang disortir di hub Bandung.',
+  'SLG-004': 'Paket dibawa kurir ke alamat tujuan.',
+  'SLG-005': 'Paket telah diterima.',
 };
 
-// Fungsi asinkron simulasi pengambilan status kiriman
 Future<String> ambilStatusKiriman(String resi) async {
-  // Simulasi jeda latensi jaringan selama 2 detik sesuai panduan modul
+  // Simulasi jeda jaringan selama dua detik
   await Future.delayed(const Duration(seconds: 2));
-
-  // Validasi format prefix resi
   if (!resi.startsWith('SLG-')) {
     throw FormatException('Format resi tidak sah: $resi');
   }
-
-  // Validasi keberadaan resi di basis data
-  final status = basisDataStatus[resi];
+  final status = basisResi[resi];
   if (status == null) {
     throw ResiTidakDitemukan(resi);
   }
-
-  return 'Resi $resi: $status';
+  return status;
 }
 
-// Fungsi simulasi pengambilan ongkir (jeda 1 detik)
 Future<double> ambilOngkir(String resi) async {
   await Future.delayed(const Duration(seconds: 1));
   return 105400;
 }
 
-// Latihan 4: Eksekusi Paralel menggunakan Future.wait
 Future<void> bandingkanWaktu() async {
   final mulai = DateTime.now();
   final hasil = await Future.wait([
@@ -232,58 +200,29 @@ Future<void> bandingkanWaktu() async {
     ambilOngkir('SLG-001'),
   ]);
   final durasi = DateTime.now().difference(mulai);
-  print('Status      : ${hasil[0]}');
-  print('Ongkir      : Rp${(hasil[1] as double).toStringAsFixed(0)}');
+  print('Status : ${hasil[0]}');
+  print('Ongkir : ${hasil[1]}');
   print('Durasi total: ${durasi.inMilliseconds} ms');
 }
 
-// Tugas Praktikum: Pemantauan Banyak Resi Secara Konkuren
 Future<void> pantauBanyakResi(List<String> daftarResi) async {
-  print('Memulai pemantauan ${daftarResi.length} resi secara bersamaan...');
-  final waktuMulai = DateTime.now();
-
-  final List<String> berhasil = [];
-  final List<String> gagal = [];
-
-  // Menjalankan seluruh permintaan resi secara bersamaan di event loop
-  // Menangkap error di dalam setiap tugas agar tidak menggagalkan tugas lainnya
-  final tasks = daftarResi.map((resi) async {
+  final tugas = daftarResi.map((resi) async {
     try {
       final status = await ambilStatusKiriman(resi);
-      berhasil.add(status);
+      print('$resi -> $status');
     } on ResiTidakDitemukan catch (e) {
-      gagal.add('Resi $resi -> Peringatan: $e');
+      print('Peringatan: $e');
     } on FormatException catch (e) {
-      gagal.add('Resi $resi -> Kesalahan Format: ${e.message}');
+      print('Kesalahan format: ${e.message}');
     } catch (e) {
-      gagal.add('Resi $resi -> Kesalahan tak terduga: $e');
+      print('Kesalahan: $e');
     }
   });
-
-  await Future.wait(tasks);
-
-  final durasi = DateTime.now().difference(waktuMulai);
-  print('Selesai dalam ${durasi.inMilliseconds} ms.');
-  print('Hasil Sukses (${berhasil.length}):');
-  for (final item in berhasil) {
-    print('  [✓] $item');
-  }
-  print('Hasil Gagal (${gagal.length}):');
-  if (gagal.isEmpty) {
-    print('  (Tidak ada resi gagal)');
-  } else {
-    for (final item in gagal) {
-      print('  [✗] $item');
-    }
-  }
+  await Future.wait(tugas);
 }
 
 Future<void> main() async {
-  print('====================================================');
-  print('LATIHAN 3: PEMANGGILAN BERURUTAN (SEQUENTIAL)');
-  print('====================================================');
   print('1. Permintaan data dikirim...');
-  final mulaiLatihan3 = DateTime.now();
   try {
     final status = await ambilStatusKiriman('SLG-002');
     print('2. $status');
@@ -296,48 +235,33 @@ Future<void> main() async {
   } catch (e) {
     print('Gagal mengambil data: $e');
   }
-  final durasiLatihan3 = DateTime.now().difference(mulaiLatihan3);
-  print('4. Proses selesai dalam: ${durasiLatihan3.inMilliseconds} ms\n');
+  print('4. Proses selesai.');
 
-  print('====================================================');
-  print('LATIHAN 4: PEMANGGILAN PARALEL DENGAN FUTURE.WAIT');
-  print('====================================================');
+  print('\n--- Latihan 4: Eksekusi Paralel ---');
   await bandingkanWaktu();
-  print('');
 
-  print('====================================================');
-  print('TUGAS PRAKTIKUM: SKENARIO 1 (SELURUH RESI SAH)');
-  print('====================================================');
-  final resiSah = ['SLG-001', 'SLG-002', 'SLG-003', 'SLG-004', 'SLG-005'];
-  await pantauBanyakResi(resiSah);
-  print('');
+  print('\n--- Tugas Praktikum: Seluruh Resi Sah ---');
+  await pantauBanyakResi(['SLG-001', 'SLG-002', 'SLG-003', 'SLG-004', 'SLG-005']);
 
-  print('====================================================');
-  print('TUGAS PRAKTIKUM: SKENARIO 2 (TERDAPAT RESI TIDAK SAH)');
-  print('====================================================');
-  final resiCampuran = ['SLG-001', 'SLG-999', 'XYZ-002', 'SLG-004', 'INV-123'];
-  await pantauBanyakResi(resiCampuran);
-  print('====================================================');
+  print('\n--- Tugas Praktikum: Terdapat Resi Tidak Sah ---');
+  await pantauBanyakResi(['SLG-001', 'SLG-999', 'XYZ-002']);
 }
 ```
 
+**Penjelasan Singkat:**
+- `ambilStatusKiriman`: Membaca data status dari Map `basisResi` (5 resi). Melempar `FormatException` bila format bukan `'SLG-'`, dan melempar `ResiTidakDitemukan` bila resi tidak ada di basis data.
+- `ambilOngkir`: Mengembalikan biaya kirim dengan jeda 1 detik.
+- `bandingkanWaktu`: Menjalankan pengambilan status dan ongkir secara bersamaan menggunakan `Future.wait`.
+- `pantauBanyakResi`: Memanggil `ambilStatusKiriman` untuk seluruh daftar resi secara simultan dengan `Future.wait`. Error pada resi yang salah ditangkap di dalam blok masing-masing sehingga proses resi lain tidak berhenti.
+
 ---
 
-### 6. Hasil Eksekusi dan Analisis
+### 6. Hasil Eksekusi dan Analisisnya
 
-#### 6.1. Eksekusi `modul03_nullsafety.dart`
-Perintah:
-```bash
-dart run latihan/modul03_nullsafety.dart
-```
-
-Output:
+#### 6.1. Output `modul03_nullsafety.dart`
 ```text
-=== LATIHAN 1: NULL SAFETY ===
 SLG-001 | Bandung | Dalam perjalanan | (tanpa catatan)
 SLG-002 | Surabaya | Diterima pada 2026-09-12T10:30:00.000 | Titipkan ke satpam
-
-=== LATIHAN 2: PENANGANAN ERROR ===
 SLG-001 -> Bandung
 Pencarian SLG-001 selesai.
 Peringatan: Resi SLG-999 tidak ditemukan pada basis data.
@@ -345,101 +269,63 @@ Pencarian SLG-999 selesai.
 ```
 
 #### 6.2. Analisis Eksperimen Latihan 1 (Butir B.3)
-Pada pengujian butir B.3, tanda tanya pada `final String? catatan` dihapus menjadi `final String catatan`.
-
-- **Pesan Error dari Compiler**:
-  ```text
-  latihan/modul03_nullsafety.dart:9:10: Error: The parameter 'catatan' can't have a value of 'null' because of its type 'String', but the implicit default value is 'null'.
-  Try adding either an explicit non-'null' default value or the 'required' modifier.
-      this.catatan,
-           ^^^^^^^
-  ```
-- **Penjelasan**: Karena tipe `String` bersifat non-nullable, variabel tidak boleh menyimpan nilai null. Ketika parameter dibuat opsional pada konstruktor tanpa argumen nilai default, Dart secara otomatis memberikan nilai bawaan `null`. Compiler menolak hal ini pada waktu kompilasi untuk menjamin keselamatan tipe (*type safety*).
-- **Penyelesaian**: Mengembalikan tipe data menjadi `String?` (nullable) atau mewajibkan pengisian argumen menggunakan kata kunci `required`.
-
-#### 6.3. Eksekusi `modul03_async.dart`
-Perintah:
-```bash
-dart run latihan/modul03_async.dart
-```
-
-Output:
+Saat tanda tanya pada deklarasi `final String? catatan` dihapus menjadi `final String catatan`, compiler Dart menampilkan pesan error:
 ```text
-====================================================
-LATIHAN 3: PEMANGGILAN BERURUTAN (SEQUENTIAL)
-====================================================
+Error: The parameter 'catatan' can't have a value of 'null' because of its type 'String', but the implicit default value is 'null'.
+Try adding either an explicit non-'null' default value or the 'required' modifier.
+```
+**Analisis:**
+Karena Dart menerapkan Sound Null Safety, tipe `String` dijamin tidak boleh bernilai null. Parameter opsional pada konstruktor `{this.catatan}` memiliki nilai bawaan implisit `null` apabila pemanggil tidak mengisinya. Hal ini melanggar aturan non-nullable sehingga ditolak saat kompilasi. Penyelesaiannya adalah mengembalikan tipe menjadi `String?` atau menambahkan kata kunci `required`.
+
+#### 6.3. Output `modul03_async.dart`
+```text
 1. Permintaan data dikirim...
-2. Resi SLG-002: Paket sedang dalam perjalanan menuju gudang transit Jakarta
+2. Paket tiba di fasilitas sortir Surabaya.
 3. Ongkos kirim: Rp105400
-4. Proses selesai dalam: 3014 ms
+4. Proses selesai.
 
-====================================================
-LATIHAN 4: PEMANGGILAN PARALEL DENGAN FUTURE.WAIT
-====================================================
-Status      : Resi SLG-001: Paket sedang disortir di hub Bandung
-Ongkir      : Rp105400
-Durasi total: 2003 ms
+--- Latihan 4: Eksekusi Paralel ---
+Status : Paket sedang dalam perjalanan menuju gudang transit.
+Ongkir : 105400.0
+Durasi total: 2004 ms
 
-====================================================
-TUGAS PRAKTIKUM: SKENARIO 1 (SELURUH RESI SAH)
-====================================================
-Memulai pemantauan 5 resi secara bersamaan...
-Selesai dalam 2002 ms.
-Hasil Sukses (5):
-  [✓] Resi SLG-001: Paket sedang disortir di hub Bandung
-  [✓] Resi SLG-002: Paket sedang dalam perjalanan menuju gudang transit Jakarta
-  [✓] Resi SLG-003: Paket tiba di fasilitas sortir Surabaya
-  [✓] Resi SLG-004: Paket sedang diantar kurir ke alamat penerima di Semarang
-  [✓] Resi SLG-005: Paket telah diterima oleh penerima di Medan
-Hasil Gagal (0):
-  (Tidak ada resi gagal)
+--- Tugas Praktikum: Seluruh Resi Sah ---
+SLG-001 -> Paket sedang dalam perjalanan menuju gudang transit.
+SLG-002 -> Paket tiba di fasilitas sortir Surabaya.
+SLG-003 -> Paket sedang disortir di hub Bandung.
+SLG-004 -> Paket dibawa kurir ke alamat tujuan.
+SLG-005 -> Paket telah diterima.
 
-====================================================
-TUGAS PRAKTIKUM: SKENARIO 2 (TERDAPAT RESI TIDAK SAH)
-====================================================
-Memulai pemantauan 5 resi secara bersamaan...
-Selesai dalam 2004 ms.
-Hasil Sukses (2):
-  [✓] Resi SLG-001: Paket sedang disortir di hub Bandung
-  [✓] Resi SLG-004: Paket sedang diantar kurir ke alamat penerima di Semarang
-Hasil Gagal (3):
-  [✗] Resi SLG-999 -> Peringatan: Resi SLG-999 tidak ditemukan pada basis data.
-  [✗] Resi XYZ-002 -> Kesalahan Format: Format resi tidak sah: XYZ-002
-  [✗] Resi INV-123 -> Kesalahan Format: Format resi tidak sah: INV-123
-====================================================
+--- Tugas Praktikum: Terdapat Resi Tidak Sah ---
+SLG-001 -> Paket sedang dalam perjalanan menuju gudang transit.
+Peringatan: Resi SLG-999 tidak ditemukan pada basis data.
+Kesalahan format: Format resi tidak sah: XYZ-002
 ```
 
 #### 6.4. Analisis Eksperimen Latihan 3 (Butir D.3 dan D.4)
-1. **Butir D.3 (Menghapus keyword `await`)**:
-   - Jika `await` dihapus: `final status = ambilStatusKiriman('SLG-002');`
-   - Output yang muncul adalah `2. Instance of 'Future<String>'`.
-   - **Penyebab**: Fungsi asinkron mengembalikan wadah masa depan (*future container*) bertipe `Future<String>`. Tanpa `await`, fungsi pemanggil tidak menanti penyelesaian nilai tersebut, melainkan langsung mencetak representasi teks `toString()` dari objek Future yang belum selesai (*uncompleted*).
-2. **Butir D.4 (Pengujian Resi `'XYZ-002'`)**:
-   - Resi `'XYZ-002'` melanggar kondisi `!resi.startsWith('SLG-')`.
-   - Program melemparkan `FormatException('Format resi tidak sah: XYZ-002')`.
-   - Kesalahan berhasil ditangkap oleh blok `on FormatException catch (e)` sehingga aplikasi tetap berjalan tertib menuju tahap berikutnya.
+- **Eksperimen D.3 (Menghapus keyword `await`)**:
+  Ketika baris `final status = await ambilStatusKiriman('SLG-002');` diubah tanpa `await`, output yang tercetak adalah `Instance of 'Future<String>'`. Hal ini terjadi karena tanpa `await`, kode tidak menunggu Future selesai, melainkan langsung mencetak objek Future itu sendiri yang statusnya masih *uncompleted*.
+- **Eksperimen D.4 (Uji penanganan error dengan `'XYZ-002'`)**:
+  Karena resi tidak berawalan `'SLG-'`, fungsi melempar `FormatException`. Kesalahan ini berhasil ditangkap oleh blok `on FormatException catch (e)` sehingga menampilkan `Kesalahan format: Format resi tidak sah: XYZ-002` tanpa menghentikan program secara paksa.
 
-#### 6.5. Perbandingan Durasi Sekuensial vs Future.wait
+#### 6.5. Perbandingan Durasi Berurutan vs Future.wait
+- **Pemanggilan Berurutan (Latihan 3)**:
+  Total waktu = 2 detik (status) + 1 detik (ongkir) = ~3.000 ms.
+- **Pemanggilan Bersamaan dengan `Future.wait` (Latihan 4)**:
+  Total waktu = ~2.004 ms. Durasi total hanya mengikuti operasi yang paling lama ($\max(2\text{s}, 1\text{s})$), sehingga menghemat waktu sekitar 1 detik.
 
-| Parameter Uji | Pemanggilan Berurutan (Latihan 3) | Pemanggilan Bersamaan / Paralel (Latihan 4) |
-|---|:---:|:---:|
-| Durasi Operasi 1 (`ambilStatusKiriman`) | ~2.000 ms | ~2.000 ms |
-| Durasi Operasi 2 (`ambilOngkir`) | ~1.000 ms | ~1.000 ms |
-| **Total Waktu Eksekusi** | **3.014 ms** | **2.003 ms** |
-| Pola Waktu | Akumulasi ($T_1 + T_2$) | Waktu Maksimum ($\max(T_1, T_2)$) |
-
-**Kesimpulan Kapan `Future.wait` Layak & Tidak Layak Digunakan:**
-- **Layak digunakan**: Saat sekumpulan tugas asinkron bersifat **independen** (tidak saling membutuhkan data satu sama lain). Contohnya: mengambil beberapa data analitik, memuat daftar banner dan notifikasi secara bersamaan, atau melacak status puluhan resi sekaligus.
-- **Tidak layak digunakan**: Saat terdapat rantai ketergantungan urutan (*waterfall dependency*), di mana tugas kedua membutuhkan data keluaran dari tugas pertama (misal: mengambil token login baru kemudian mengambil data pengguna menggunakan token tersebut).
+**Kesimpulan Kapan `Future.wait` Layak Digunakan dan Kapan Tidak:**
+- **Layak digunakan**: Ketika beberapa operasi asinkron **tidak saling bergantung** satu sama lain, seperti mengambil status dan ongkir sekaligus, atau melacak status banyak resi secara bersamaan.
+- **Tidak layak digunakan**: Ketika operasi asinkron memiliki ketergantungan urutan (*dependency*), di mana hasil operasi pertama diperlukan sebagai input untuk operasi kedua.
 
 ---
 
-### 7. Jawaban Butir Tugas Praktikum (Sub-bab F)
-1. **F.1**: Fungsi `ambilStatusKiriman` membaca status dari koleksi `basisDataStatus` yang berisi 5 resi (`SLG-001` hingga `SLG-005`). Jika format salah melempar `FormatException`, dan jika resi tidak terdaftar di Map melempar `ResiTidakDitemukan`.
-2. **F.2**: Fungsi `pantauBanyakResi` memetakan daftar resi ke sekumpulan tugas asinkron yang dieksekusi bersamaan via `Future.wait`. Setiap tugas dilengkapi blok `try-catch` mandiri sehingga resi gagal tidak membatalkan atau menghentikan resi lain yang valid.
-3. **F.3 Output Skenario**:
-   - **Skenario 1 (Semua Sah)**: 5 resi sah diproses secara bersamaan dalam waktu **2.002 ms** dengan tingkat keberhasilan 100%.
-   - **Skenario 2 (Terdapat Resi Tidak Sah)**: 5 resi diproses bersamaan dalam **2.004 ms**. 2 resi sah berhasil ditampilkan, dan 3 resi tidak sah (1 tidak terdaftar, 2 salah format) dicatat di daftar gagal tanpa menyebabkan aplikasi terhenti paksa (*crash*).
+### 7. Jawaban Tugas Praktikum (Sub-bab F)
+1. **F.1**: Fungsi `ambilStatusKiriman` membaca data dari Map `basisResi` yang berisi 5 resi (`SLG-001` s/d `SLG-005`), serta melemparkan `ResiTidakDitemukan` jika resi tidak terdaftar dan `FormatException` jika awalan resi salah.
+2. **F.2**: Fungsi `pantauBanyakResi(List<String> daftarResi)` memanggil `ambilStatusKiriman` untuk seluruh resi secara bersamaan dengan `Future.wait`. Setiap pemanggilan dibungkus `try-catch` sehingga resi gagal tercatat tanpa menghentikan proses pemantauan resi lainnya.
+3. **F.3**:
+   - Skenario seluruh resi sah: seluruh 5 resi (`SLG-001` s/d `SLG-005`) berhasil ditampilkan statusnya secara bersamaan.
+   - Skenario terdapat resi tidak sah (`['SLG-001', 'SLG-999', 'XYZ-002']`): resi `SLG-001` sukses ditampilkan, resi `SLG-999` ditangkap sebagai peringatan resi tidak ditemukan, dan `XYZ-002` ditangkap sebagai kesalahan format. Seluruh proses selesai dengan tertib.
 
 ---
 
@@ -449,27 +335,25 @@ $ dart analyze
 Analyzing silog_app...
 No issues found!
 ```
-Hasil pemeriksaan kode program menunjukkan **No issues found!**, yang membuktikan bahwa seluruh implementasi bebas dari pelanggaran null safety dan linting rules.
+Program sepenuhnya bebas dari error null safety dan memenuhi panduan linter.
 
 ---
 
 ### 9. Kesimpulan dan Kendala
 - **Kesimpulan**:
-  1. Fitur Sound Null Safety di Dart menjamin keandalan perangkat lunak sejak fase kompilasi sehingga memangkas risiko crash akibat dereferensi pointer null.
-  2. Penggunaan `async/await` memudahkan penulisan kode asinkron dengan gaya sekuensial yang mudah dibaca.
-  3. Pemanfaatan `Future.wait` meningkatkan efisiensi waktu respon aplikasi secara drastis saat menangani banyak operasi I/O simultan.
+  1. Fitur Null Safety di Dart menjamin keamanan program terhadap error null saat runtime melalui pemeriksaan ketat pada waktu kompilasi.
+  2. Pemrograman asinkron (`Future`, `async`, `await`) memastikan antarmuka aplikasi tidak membeku saat menjalankan operasi yang memakan waktu (I/O).
+  3. `Future.wait` memberikan efisiensi waktu yang signifikan saat mengeksekusi operasi asinkron independen secara bersamaan.
 - **Kendala dan Solusi**:
-  1. Terjadi galat `Could not find file` akibat perbedaan lokasi working directory saat eksekusi CLI. Solusinya adalah menjalankan perintah dari root paket atau menyesuaikan path berkas.
-  2. Munculnya peringatan linter Flutter `avoid_print` untuk kode latihan CLI. Solusinya adalah mengatur `avoid_print: false` pada `silog_app/analysis_options.yaml`.
+  1. Terjadi kendala `Could not find file` pada terminal akibat menjalankan perintah dari subdirektori `latihan/`. Solusinya adalah menjalankan dari direktori root `silog_app` (`cd ..`).
+  2. Aturan linter `avoid_print` memunculkan info linting pada kode latihan konsol. Solusinya adalah mengaktifkan `avoid_print: false` pada `analysis_options.yaml`.
 
 ---
 
 ### 10. Tautan Repositori dan Riwayat Commit
-- **URL Repositori** : [https://github.com/MuhammadMallq/silog-714240062.git](https://github.com/MuhammadMallq/silog-714240062.git)
-- **Cabang Aktif** : `praktikum/modul-03`
-- **Riwayat Commit Terakhir**:
+- **Repositori**: [https://github.com/MuhammadMallq/silog-714240062.git](https://github.com/MuhammadMallq/silog-714240062.git)
+- **Cabang**: `praktikum/modul-03`
+- **Riwayat Commit**:
   ```text
-  3b98c55 (HEAD -> praktikum/modul-03) Modul 3: Null Safety dan Pemrograman Asinkron
-  a9101cc (origin/main, origin/HEAD, main) Modul 2 : Dasar Pemograman Bahasa Dart
-  29fed38 Modul 1: inisialisasi proyek SiLog
+  Modul 3: Null Safety dan Pemrograman Asinkron
   ```

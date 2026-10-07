@@ -1,12 +1,8 @@
-// Modul 03: Null Safety dan Penanganan Error
-// Praktikum Pemrograman IV - D4 Teknik Informatika ULBI
-
 class DataKiriman {
   final String resi; // wajib
   final String kotaTujuan; // wajib
   final String? catatan; // opsional
   final DateTime? waktuTerima; // opsional
-
   DataKiriman({
     required this.resi,
     required this.kotaTujuan,
@@ -23,11 +19,9 @@ String ringkasan(DataKiriman k) {
   return '${k.resi} | ${k.kotaTujuan} | $status | $catatan';
 }
 
-// Latihan 2: Penanganan Error
 class ResiTidakDitemukan implements Exception {
   final String resi;
   ResiTidakDitemukan(this.resi);
-
   @override
   String toString() => 'Resi $resi tidak ditemukan pada basis data.';
 }
@@ -61,7 +55,6 @@ void ujiPenanganan() {
 }
 
 void main() {
-  print('=== LATIHAN 1: NULL SAFETY ===');
   final daftar = <DataKiriman>[
     DataKiriman(resi: 'SLG-001', kotaTujuan: 'Bandung'),
     DataKiriman(
@@ -75,6 +68,5 @@ void main() {
     print(ringkasan(k));
   }
 
-  print('\n=== LATIHAN 2: PENANGANAN ERROR ===');
   ujiPenanganan();
 }
