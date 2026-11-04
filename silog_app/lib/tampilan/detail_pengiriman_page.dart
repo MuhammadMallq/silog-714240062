@@ -3,67 +3,75 @@ import '../model/pengiriman.dart';
 
 class DetailPengirimanPage extends StatelessWidget {
   final Pengiriman pengiriman;
-  const DetailPengirimanPage({super.key, required this.pengiriman});
-  Widget _baris(String label, String nilai) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: 130,
-            child: Text(label, style: const TextStyle(color: Colors.grey)),
+
+  const DetailPengirimanPage({
+    super.key,
+    required this.pengiriman,
+  });
+
+  void _tampilkanDialogKonfirmasi(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: const Text('Konfirmasi Hapus'),
+          content: Text(
+            'Apakah Anda yakin ingin menghapus data pengiriman resi ${pengiriman.resi}?',
           ),
-          const Text(': '),
-          Expanded(child: Text(nilai)),
-        ],
-      ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext),
+              child: const Text('Batal'),
+            ),
+            FilledButton(
+              style: FilledButton.styleFrom(backgroundColor: Colors.red),
+              onPressed: () {
+                Navigator.pop(dialogContext); // 1. Tutup AlertDialog
+                Navigator.pop(context, pengiriman.resi); // 2. Kembalikan resi ke halaman daftar
+              },
+              child: const Text('Hapus'),
+            ),
+          ],
+        );
+      },
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    final tgl = pengiriman.tanggalKirim;
     return Scaffold(
-      appBar: AppBar(title: Text(pengiriman.resi)),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
+      appBar: AppBar(
+        title: Text('Detail: ${pengiriman.resi}'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.delete, color: Colors.red),
+            onPressed: () => _tampilkanDialogKonfirmasi(context),
+          ),
+        ],
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Informasi Pengiriman',
-              style: Theme.of(context).textTheme.titleLarge,
+              'Resi: ${pengiriman.resi}',
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-            const Divider(height: 24),
-            _baris('Nomor Resi', pengiriman.resi),
-            _baris('Status', pengiriman.status),
-            _baris('Gudang Asal', pengiriman.asal.nama),
-            _baris('Kota Tujuan', pengiriman.kotaTujuan),
-            _baris('Tanggal Kirim', '${tgl.day}/${tgl.month}/${tgl.year}'),
-            const SizedBox(height: 16),
-            Text(
-              'Rincian Barang',
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-            const Divider(height: 24),
-            _baris('Kode Barang', pengiriman.barang.kode),
-            _baris('Nama Barang', pengiriman.barang.nama),
-            _baris(
-              'Jumlah',
-              '${pengiriman.jumlah} ${pengiriman.barang.satuan}',
-            ),
-            _baris(
-              'Nilai Barang',
-              'Rp${pengiriman.nilaiBarang.toStringAsFixed(0)}',
-            ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 8),
+            Text('Kota Tujuan: ${pengiriman.kotaTujuan}'),
+            Text('Status: ${pengiriman.status}'),
+            Text('Nama Barang: ${pengiriman.barang.nama}'),
+            Text('Harga Satuan: Rp ${pengiriman.barang.hargaSatuan}'),
+            Text('Jumlah: ${pengiriman.barang.jumlah}'),
+            const Spacer(),
             SizedBox(
               width: double.infinity,
-              child: FilledButton.icon(
-                onPressed: () => Navigator.pop(context),
-                icon: const Icon(Icons.arrow_back),
-                label: const Text('Kembali ke Daftar'),
+              child: OutlinedButton.icon(
+                style: OutlinedButton.styleFrom(foregroundColor: Colors.red),
+                onPressed: () => _tampilkanDialogKonfirmasi(context),
+                icon: const Icon(Icons.delete),
+                label: const Text('Hapus Data Pengiriman'),
               ),
             ),
           ],
