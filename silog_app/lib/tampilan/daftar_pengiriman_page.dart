@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import '../data/data_contoh.dart';
+import '../data/preferensi.dart';
+import '../main.dart';
 import '../model/pengiriman.dart';
 import '../widget/kartu_pengiriman.dart';
 import 'detail_pengiriman_page.dart';
 import 'form_pengiriman_page.dart';
+import 'stok_page.dart';
 
 class DaftarPengirimanPage extends StatefulWidget {
   const DaftarPengirimanPage({super.key});
@@ -75,7 +78,39 @@ Future<void> _bukaDetail(Pengiriman item) async {
   Widget build(BuildContext context) {
     const opsi = ['Semua', 'Menunggu Pickup', 'Dalam Perjalanan', 'Diterima'];
     return Scaffold(
-      appBar: AppBar(title: const Text('Daftar Pengiriman')),
+      appBar: AppBar(
+        title: const Text('Daftar Pengiriman'),
+        actions: [
+          // Tugas 3: Tombol alih mode gelap/terang berbasis SharedPreferences
+          ValueListenableBuilder<ThemeMode>(
+            valueListenable: temaAppNotifier,
+            builder: (context, themeMode, _) {
+              final isDark = themeMode == ThemeMode.dark;
+              return IconButton(
+                icon: Icon(isDark ? Icons.light_mode : Icons.dark_mode_outlined),
+                tooltip: isDark ? 'Mode Terang' : 'Mode Gelap',
+                onPressed: () async {
+                  final baru = !isDark;
+                  await Preferensi().setModeGelap(baru);
+                  temaAppNotifier.value = baru ? ThemeMode.dark : ThemeMode.light;
+                },
+              );
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.inventory_2_outlined),
+            tooltip: 'Stok Gudang',
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const StokPage(),
+                ),
+              );
+            },
+          ),
+        ],
+      ),
       body: Column(
         children: [
           SingleChildScrollView(
