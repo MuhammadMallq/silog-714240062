@@ -6,6 +6,7 @@ import '../model/pengiriman.dart';
 import '../widget/kartu_pengiriman.dart';
 import 'detail_pengiriman_page.dart';
 import 'form_pengiriman_page.dart';
+import 'order_page.dart';
 import 'stok_page.dart';
 
 class DaftarPengirimanPage extends StatefulWidget {
@@ -105,6 +106,18 @@ Future<void> _bukaDetail(Pengiriman item) async {
                 context,
                 MaterialPageRoute(
                   builder: (_) => const StokPage(),
+                ),
+              );
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.cloud_sync_outlined),
+            tooltip: 'Order Layanan Web',
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const OrderPage(),
                 ),
               );
             },
